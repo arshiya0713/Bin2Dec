@@ -1,0 +1,121 @@
+package bin2dec;
+import javax.swing.*;
+import java.awt.event.*;
+import java.awt.*;
+
+public class Bin2DecUI extends JFrame{
+	
+	JTextField inputField;
+	JLabel errorLabel;
+	JLabel resultLabel;
+	
+	public Bin2DecUI() {
+		setTitle("Bin2Dec Convereter");
+		setSize(600, 500);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(Color.decode("#cecbd3"));
+        
+        Color navyBg     = Color.decode("#f3f1eb");
+        Color coldPanel  = Color.decode("#b2c0d2");
+        Color arcticText = Color.decode("#cecbd3");
+        Color snowText   = Color.decode("#3d547f");
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(30, 40, 30, 40));
+        panel.setBackground(coldPanel);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+        	    BorderFactory.createLineBorder(snowText, 2),
+        	    BorderFactory.createEmptyBorder(30, 40, 30, 40)
+        	));
+        panel.setPreferredSize(new Dimension(400, 320));
+        panel.setMaximumSize(new Dimension(400,320));
+        
+        JLabel label = new JLabel("Enter Binary Number : ");
+        label.setForeground(snowText);
+        label.setAlignmentX(CENTER_ALIGNMENT);      
+        label.setFont(new Font("SansSerif", Font.BOLD, 18));
+        
+        inputField = new JTextField(20);
+        inputField.setAlignmentX(CENTER_ALIGNMENT);
+        inputField.setMaximumSize(new Dimension(300, 36));
+        inputField.setBackground(navyBg);
+        inputField.setForeground(snowText);
+        inputField.setCaretColor(snowText);
+        inputField.setFont(new Font("Monospaced", Font.BOLD, 18));
+        
+        resultLabel = new JLabel("Result: ");
+        resultLabel.setAlignmentX(CENTER_ALIGNMENT);
+        resultLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+        resultLabel.setForeground(snowText);
+
+        JButton button = new JButton("Convert");
+        button.setAlignmentX(CENTER_ALIGNMENT);
+        button.setMaximumSize(new Dimension(150, 36));
+        button.setBackground(arcticText);
+        button.setForeground(navyBg);
+        button.setOpaque(true);
+        button.setBorderPainted(true);
+        button.setMaximumSize(new Dimension(320, 36));
+        button.setPreferredSize(new Dimension(320, 36));
+        
+        button.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		String input = inputField.getText().trim();
+        		
+        		if (!input.matches("[01]+")) {
+        			errorLabel.setText("Only 0 and 1 allowed");
+        			resultLabel.setText("Result: ");
+        			return;
+        		}
+        		
+        		if (input.length() > 8) {
+                    errorLabel.setText("Max 8 digits allowed!");
+                    resultLabel.setText("Result: ");
+                    return;
+                }
+
+                // Step 4 — clear error and do the math
+                errorLabel.setText(" ");
+
+                int decimal = 0;
+                int length = input.length();
+
+                for (int i = 0; i < length; i++) {
+                    int bit = input.charAt(i) - '0';
+                    decimal += bit * (int) Math.pow(2, length - 1 - i);
+                }
+
+                // Step 5 — show the result
+                resultLabel.setText("Result: " + decimal);
+        	}
+        });
+        
+        errorLabel = new JLabel(" ");
+        errorLabel.setAlignmentX(CENTER_ALIGNMENT);
+        errorLabel.setForeground(Color.decode("#ff6b6b"));
+        
+        panel.add(label);
+        panel.add(Box.createVerticalStrut(6));
+        panel.add(inputField);
+        panel.add(Box.createVerticalStrut(4));
+        panel.add(button);
+        panel.add(Box.createVerticalStrut(14));
+        panel.add(errorLabel);
+        panel.add(Box.createVerticalStrut(10));
+        panel.add(resultLabel);
+        
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.setBackground(snowText);
+        wrapper.add(panel);
+        add(wrapper, BorderLayout.CENTER);
+        
+        setVisible(true);
+	}
+	
+	public static void main(String[] args) {
+		new Bin2DecUI();
+	}
+}
